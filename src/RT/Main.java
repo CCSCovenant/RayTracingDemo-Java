@@ -46,8 +46,8 @@ public class Main extends Application {
     }
 
     private void Render(GraphicsContext gc) throws IOException {
-        int W = 400;
-        int H = 300;
+        int W = 800;
+        int H = 600;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
@@ -56,13 +56,14 @@ public class Main extends Application {
         Vec3 lookat = new Vec3(0,0,0);
         Vec3 vup = new Vec3(0,1,0);
         double t0 = 0;
-        double t1 = 1;
+        double t1 = 0;
         Camera cam = new Camera(20,8.0/6.0,0.1,10,t0,t1,lookfrom,lookat,vup);
-        ArrayList<Hitable> scene = randomeScene();
+        ArrayList<Hitable> scene = TestScene();
+        //HitableList world = TestScene();
         BVHnode world = new BVHnode(scene,t0,t1);
 
 
-        int spp = 50;
+        int spp = 100;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -74,7 +75,7 @@ public class Main extends Application {
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < Thread; i++) {
-            WorkerPool[i] = new PixelWorker(PixelBuffer,cam,world,i*(H/Thread),Math.max(H,(i+1)*(H/Thread)),W,H,MaxDepth,spp,i);
+            WorkerPool[i] = new PixelWorker(PixelBuffer,cam,world,i*(H/Thread),Math.min(H,(i+1)*(H/Thread)),W,H,MaxDepth,spp,i);
             WorkerPool[i].start();
         }
         System.out.println("Writing PixelBuffer into image");
@@ -85,6 +86,20 @@ public class Main extends Application {
 
             }
         }
+        /*
+        for (int y =0;y<H;y++){
+            System.out.println("Rendering Line:"+y);
+            for (int x=0;x<W;x++){
+                for (int i=0;i<spp;i++){
+                    double u = (x + Math.random()) / W;
+                    double v = (y + Math.random()) / H;
+                    PixelBuffer[x][y] = PixelBuffer[x][y].add(rayColor(cam.getRay(u,v),world,MaxDepth));
+                }
+                PixelBuffer[x][y] = PixelBuffer[x][y].div(spp);
+                //  System.out.println("Color in ["+x+"] ["+y+"] is "+buffer[x][y].x()+" "+buffer[x][y].y()+" "+buffer[x][y].z());
+            }
+        }
+        */
         long endTime = System.currentTimeMillis();
 
         System.out.println("All PixelWorkers Finished");
@@ -113,7 +128,9 @@ public class Main extends Application {
             return n;
         }
     }
-    public ArrayList<Hitable> randomeScene(){
+
+
+    public ArrayList<Hitable> TestScene(){
         ArrayList<Hitable> world = new ArrayList<Hitable>();
         world.add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5,0)));
         world.add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(0.3, 1, 0.2))));
@@ -121,21 +138,55 @@ public class Main extends Application {
         world.add(new Sphere(new Vec3(0, -1000, -1), 1000, new Lambertian(new Vec3(0.9, 0.9, 0.9))));
         for (int x = -11;x<11;x++){
             for (int z = -11;z<11;z++){
-                double material = Math.random();
-                Vec3 center = new Vec3(x+0.4*Math.random(),0.2,z+0.4*Math.random());
-                if (material<0.5){
-                    Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
-                    world.add(new Sphere(center,0.2,new Lambertian(color)));
-                }else if (material<0.8){
-                    Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
-                    world.add(new Sphere(center,0.2,new Metal(color,Math.random()*0.2)));
-                }else {
-                    world.add(new Sphere(center ,0.2, new Dielectric(1.5,0)));
-                }
+
+                Vec3 center = new Vec3(x,0.2,z);
+                Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
+                world.add(new Sphere(center,0.2,new Lambertian(color)));
+
             }
         }
         return world;
     }
+    /*
+    public HitableList TestScene(){
+        HitableList world = new HitableList();
+        world.add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5,0)));
+        world.add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(0.3, 1, 0.2))));
+        world.add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(1, 0.9, 1),0)));
+        world.add(new Sphere(new Vec3(0, -1000, -1), 1000, new Lambertian(new Vec3(0.9, 0.9, 0.9))));
+        for (int x = -11;x<11;x++){
+            for (int z = -11;z<11;z++){
+
+                Vec3 center = new Vec3(x,0.2,z);
+                Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
+                world.add(new Sphere(center,0.2,new Lambertian(color)));
+
+            }
+        }
+        return world;
+    }*/
+
+
+    public Vec3 rayColor(Ray r, BVHnode world, int depth) {
+        HitR rec = new HitR();
+        if (depth<=0){
+            return new Vec3(0,0,0);
+        }
+        if (world.hit(r,0,Double.POSITIVE_INFINITY,rec)){
+            Ray out = new Ray();
+            Vec3 color = new Vec3();
+            if (rec.m.scatter(r,rec,color,out)){
+                return color.mul(rayColor(out,world,depth-1));
+            }
+            return new Vec3(0,0,0);
+        }
+        Vec3 unitDirection = r.direction.unitVector();
+        double t = 0.5*(unitDirection.y()+1.0);
+        Vec3 white = new Vec3(1.0,1.0,1.0);
+        Vec3 blue = new Vec3(0.5,0.7,1.0);
+        return white.mul(1.0-t).add(blue.mul(t));
+    }
+
 
 
 }

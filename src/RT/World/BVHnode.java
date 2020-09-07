@@ -38,7 +38,10 @@ public class BVHnode extends Hitable {
             leftNode = new BVHnode(Objects.subList(0,mid),t0,t1);
             rightNode = new BVHnode(Objects.subList(mid,Objects.size()),t0,t1);
 
-            this.Boundingbox.copyValue(RTutils.surroundingBox(leftNode.boundingBox(t0, t1),rightNode.boundingBox(t0, t1)));
+            AABB LeftBB = leftNode.boundingBox(t0, t1);
+            AABB RightBB = rightNode.boundingBox(t0, t1);
+            AABB TmpBB = RTutils.surroundingBox(LeftBB,RightBB);
+            this.Boundingbox.copyValue(TmpBB);
 
         }else {
             if (Objects.size()==1){
@@ -56,10 +59,22 @@ public class BVHnode extends Hitable {
         if (!Boundingbox.hit(r,minT,maxT)){
             return false;
         }else {
-            boolean hitLeft = leftNode.hit(r,minT,maxT,rec);
-            boolean hitRight = rightNode.hit(r,minT,hitLeft?rec.t:maxT,rec);
+            boolean hitLeft = false;
+            boolean hitRight = false;
+            if (leftNode!=null) {
+                hitLeft = leftNode.hit(r, minT, maxT, rec);
+            }
+            if (rightNode!=null) {
+                hitRight = rightNode.hit(r, minT, hitLeft ? rec.t : maxT, rec);
+            }
             return hitLeft||hitRight;
         }
+    }
+    @Override
+    public AABB boundingBox(double t0, double t1) {
+        AABB tmp = new AABB();
+        tmp.copyValue(this.Boundingbox);
+        return tmp;
     }
 
 

@@ -31,9 +31,11 @@ public class PixelWorker extends Thread {
     public void run() {
         int diff = end-start;
         for (int y =start;y<end;y++){
-            if ((start-y)%(diff/10)==0){
+           // System.out.println("Rendering Line:"+y);
+            //long start = System.currentTimeMillis();
+            /*if ((start-y)%(diff/10)==0){
                 System.out.println("PixelWork:["+pid+"] Progress:"+100*((double)(y-start)/diff)+"%");
-            }
+            }*/
             for (int x=0;x<W;x++){
                for (int i=0;i<spp;i++){
                    double u = (x + Math.random()) / W;
@@ -43,6 +45,9 @@ public class PixelWorker extends Thread {
                buffer[x][y] = buffer[x][y].div(spp);
              //  System.out.println("Color in ["+x+"] ["+y+"] is "+buffer[x][y].x()+" "+buffer[x][y].y()+" "+buffer[x][y].z());
             }
+            //long end = System.currentTimeMillis();
+           // System.out.println("Line "+y+" finished in "+(end-start)+" ms");
+
         }
         System.out.println("PixelWork:["+pid+"] finished");
     }
