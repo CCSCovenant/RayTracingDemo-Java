@@ -1,7 +1,7 @@
 package RT;
 
 public class Vec3 {
-    double[] e = new double[3];
+    public double[] e = new double[3];
     public Vec3(){}
     public Vec3(double x, double y, double z){
         e[0] = x;

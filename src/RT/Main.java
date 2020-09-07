@@ -3,8 +3,11 @@ package RT;
 import RT.Materials.Dielectric;
 import RT.Materials.Lambertian;
 import RT.Materials.Metal;
+import RT.Objects.Hitable;
 import RT.Objects.MovingSphere;
 import RT.Objects.Sphere;
+import RT.World.BVHnode;
+import RT.World.HitableList;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -17,10 +20,9 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 
 public class Main extends Application {
@@ -44,27 +46,24 @@ public class Main extends Application {
     }
 
     private void Render(GraphicsContext gc) throws IOException {
-        int W = 800;
-        int H = 600;
+        int W = 400;
+        int H = 300;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
 
-        Vec3 lookfrom = new Vec3(0,3,5);
-        Vec3 lookat = new Vec3(0,0,-1);
+        Vec3 lookfrom = new Vec3(13,2,3);
+        Vec3 lookat = new Vec3(0,0,0);
         Vec3 vup = new Vec3(0,1,0);
-        Camera cam = new Camera(20,8.0/6.0,0.1,8,0,1.0,lookfrom,lookat,vup);
+        double t0 = 0;
+        double t1 = 1;
+        Camera cam = new Camera(20,8.0/6.0,0.1,10,t0,t1,lookfrom,lookat,vup);
+        ArrayList<Hitable> scene = randomeScene();
+        BVHnode world = new BVHnode(scene,t0,t1);
 
-        World world = new World();
-        world.add(new Sphere(new Vec3(0, 0, -1), 0.3, new Dielectric(1.5,0)));
-        world.add(new Sphere(new Vec3(-1, 0, -1), 0.3, new Lambertian(new Vec3(0.3, 1, 0.2))));
-        world.add(new MovingSphere(new Vec3(0, 0, -2),new Vec3(0, 0.4, -2), 0.3,0,0.5, new Lambertian(new Vec3(0.8, 0.8, 0.8))));
-        world.add(new Sphere(new Vec3(1, 0, -1), 0.3, new Metal(new Vec3(1, 0.9, 1),0)));
-        world.add(new Sphere(new Vec3(0, -1000.5, -1), 1000, new Lambertian(new Vec3(0.9, 0.9, 0.9))));
 
         int spp = 50;
         int MaxDepth = 50;
-
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
         for (int y=0;y<H;y++){
@@ -72,6 +71,8 @@ public class Main extends Application {
                 PixelBuffer[x][y] = new Vec3();
             }
         }
+        long startTime = System.currentTimeMillis();
+
         for (int i = 0; i < Thread; i++) {
             WorkerPool[i] = new PixelWorker(PixelBuffer,cam,world,i*(H/Thread),Math.max(H,(i+1)*(H/Thread)),W,H,MaxDepth,spp,i);
             WorkerPool[i].start();
@@ -84,7 +85,10 @@ public class Main extends Application {
 
             }
         }
+        long endTime = System.currentTimeMillis();
+
         System.out.println("All PixelWorkers Finished");
+        System.out.println("Render finished in "+(endTime-startTime)+"ms");
         BufferedImage IOimage = new BufferedImage(W, H, BufferedImage.TYPE_4BYTE_ABGR);
 
         for (int y=H-1;y>=0;y--){
@@ -96,9 +100,10 @@ public class Main extends Application {
                 IOimage.setRGB(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
             }
         }
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\MotionBlur.png"));
+        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\TestScene2.png"));
         gc.drawImage(image, 0, 0);
     }
+
     public int clamp(int min,int max ,int n){
         if (n<min){
             return min;
@@ -107,6 +112,29 @@ public class Main extends Application {
         }else {
             return n;
         }
+    }
+    public ArrayList<Hitable> randomeScene(){
+        ArrayList<Hitable> world = new ArrayList<Hitable>();
+        world.add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5,0)));
+        world.add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(0.3, 1, 0.2))));
+        world.add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(1, 0.9, 1),0)));
+        world.add(new Sphere(new Vec3(0, -1000, -1), 1000, new Lambertian(new Vec3(0.9, 0.9, 0.9))));
+        for (int x = -11;x<11;x++){
+            for (int z = -11;z<11;z++){
+                double material = Math.random();
+                Vec3 center = new Vec3(x+0.4*Math.random(),0.2,z+0.4*Math.random());
+                if (material<0.5){
+                    Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
+                    world.add(new Sphere(center,0.2,new Lambertian(color)));
+                }else if (material<0.8){
+                    Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
+                    world.add(new Sphere(center,0.2,new Metal(color,Math.random()*0.2)));
+                }else {
+                    world.add(new Sphere(center ,0.2, new Dielectric(1.5,0)));
+                }
+            }
+        }
+        return world;
     }
 
 

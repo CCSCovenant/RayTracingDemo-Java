@@ -5,7 +5,7 @@ import RT.Materials.Material;
 import RT.Ray;
 import RT.Vec3;
 
-public class Sphere extends Hitable{
+public class Sphere extends Hitable {
     Vec3 center;
     double radius;
     Material material;
@@ -47,5 +47,12 @@ public class Sphere extends Hitable{
             }
         }
         return false;
+    }
+
+    @Override
+    public AABB boundingBox(double t0, double t1) {
+        Vec3 minP = center.sub(new Vec3(radius,radius,radius));
+        Vec3 maxP = center.add(new Vec3(radius,radius,radius));
+        return new AABB(minP,maxP);
     }
 }

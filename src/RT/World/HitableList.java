@@ -1,13 +1,15 @@
-package RT;
+package RT.World;
 
+import RT.HitR;
 import RT.Objects.Hitable;
+import RT.Ray;
 
 import java.util.ArrayList;
 
-public class World {
+public class HitableList {
     ArrayList<Hitable> elements;
 
-    public World(){
+    public HitableList(){
         elements = new ArrayList<>();
     }
     public void add(Hitable object){

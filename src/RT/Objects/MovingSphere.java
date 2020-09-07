@@ -2,6 +2,7 @@ package RT.Objects;
 
 import RT.HitR;
 import RT.Materials.Material;
+import RT.RTutils;
 import RT.Ray;
 import RT.Vec3;
 
@@ -58,5 +59,11 @@ public class MovingSphere extends Hitable {
             }
         }
         return false;
+    }
+    @Override
+    public AABB boundingBox(double t0, double t1) {
+        AABB AABBt0 = new AABB(getCenter(t0).sub(new Vec3(radius,radius,radius)),getCenter(t0).add(new Vec3(radius,radius,radius)));
+        AABB AABBt1 = new AABB(getCenter(t1).sub(new Vec3(radius,radius,radius)),getCenter(t1).add(new Vec3(radius,radius,radius)));
+        return RTutils.surroundingBox(AABBt0,AABBt1);
     }
 }

@@ -1,5 +1,7 @@
 package RT;
 
+import RT.Objects.AABB;
+
 public final class RTutils {
     public static Vec3 RandomInUnitSphere(){
         while (true){
@@ -37,4 +39,26 @@ public final class RTutils {
             }
         }
     }
+    public static AABB surroundingBox(AABB box0, AABB box1){
+        if (box0 == null){
+            if (box1 == null){
+                return null;
+            }
+            AABB tmp = new AABB();
+            tmp.copyValue(box1);
+            return tmp;
+        }
+        if (box1 == null){
+            if (box0 == null){
+                return null;
+            }
+            AABB tmp = new AABB();
+            tmp.copyValue(box0);
+            return tmp;
+        }
+        Vec3 min = new Vec3(Math.min(box0.minP.x(),box1.minP.x()),Math.min(box0.minP.y(),box1.minP.y()),Math.min(box0.minP.z(),box1.minP.z()));
+        Vec3 max = new Vec3(Math.max(box0.maxP.x(),box1.maxP.x()),Math.max(box0.maxP.x(),box1.maxP.x()),Math.max(box0.maxP.x(),box1.maxP.x()));
+        return new AABB(min,max);
+    }
+    // 输入两个AABB 输出一个将其包围的AABB;
 }

@@ -1,10 +1,13 @@
 package RT;
 
 
+import RT.World.BVHnode;
+import RT.World.HitableList;
+
 public class PixelWorker extends Thread {
     Vec3[][] buffer;
     Camera cam;
-    World world;
+    BVHnode world;
     int start;
     int end;
     int W;
@@ -12,7 +15,7 @@ public class PixelWorker extends Thread {
     int depth;
     int spp;
     int pid;
-    public PixelWorker(Vec3[][] buffer, Camera cam, World world, int start, int end, int W, int H, int depth,int spp,int pid){
+    public PixelWorker(Vec3[][] buffer, Camera cam, BVHnode world, int start, int end, int W, int H, int depth, int spp, int pid){
         this.buffer = buffer;
         this.cam = cam;
         this.world = world;
@@ -43,7 +46,7 @@ public class PixelWorker extends Thread {
         }
         System.out.println("PixelWork:["+pid+"] finished");
     }
-    public Vec3 rayColor(Ray r, World world, int depth) {
+    public Vec3 rayColor(Ray r, BVHnode world, int depth) {
         HitR rec = new HitR();
         if (depth<=0){
             return new Vec3(0,0,0);
