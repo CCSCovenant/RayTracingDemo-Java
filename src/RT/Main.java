@@ -36,7 +36,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("RayTracing Test");
         Group root = new Group();
-        javafx.scene.canvas.Canvas canvas = new Canvas(600, 600);
+        javafx.scene.canvas.Canvas canvas = new Canvas(1200, 1200);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Render(gc);
 
@@ -47,7 +47,7 @@ public class Main extends Application {
 
     private void Render(GraphicsContext gc) throws IOException {
         int W = 1200;
-        int H = 1200 ;
+        int H = 1200;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
