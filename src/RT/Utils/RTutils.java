@@ -1,6 +1,7 @@
-package RT;
+package RT.Utils;
 
 import RT.Objects.AABB;
+import RT.Utils.Vec3;
 
 public final class RTutils {
     public static Vec3 RandomInUnitSphere(){

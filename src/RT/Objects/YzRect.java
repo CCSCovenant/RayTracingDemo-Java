@@ -1,9 +1,9 @@
 package RT.Objects;
 
-import RT.HitR;
+import RT.Utils.HitR;
 import RT.Materials.Material;
-import RT.Ray;
-import RT.Vec3;
+import RT.Utils.Ray;
+import RT.Utils.Vec3;
 
 public class YzRect extends Hitable {
     double y0;

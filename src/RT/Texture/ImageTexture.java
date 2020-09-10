@@ -1,7 +1,7 @@
 package RT.Texture;
 
-import RT.RTutils;
-import RT.Vec3;
+import RT.Utils.RTutils;
+import RT.Utils.Vec3;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,4 +1,8 @@
-package RT;
+package RT.World;
+
+import RT.Utils.RTutils;
+import RT.Utils.Vec3;
+import RT.Utils.Ray;
 
 public class Camera {
     Vec3 origin;

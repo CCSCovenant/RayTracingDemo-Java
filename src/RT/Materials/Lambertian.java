@@ -1,8 +1,10 @@
 package RT.Materials;
 
-import RT.*;
-import RT.Materials.Material;
 import RT.Texture.Texture;
+import RT.Utils.RTutils;
+import RT.Utils.Vec3;
+import RT.Utils.HitR;
+import RT.Utils.Ray;
 
 public class Lambertian extends Material {
     Texture texture;

@@ -1,8 +1,8 @@
 package RT.World;
 
-import RT.HitR;
 import RT.Objects.Hitable;
-import RT.Ray;
+import RT.Utils.HitR;
+import RT.Utils.Ray;
 
 import java.util.ArrayList;
 

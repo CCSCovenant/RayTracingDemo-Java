@@ -1,9 +1,9 @@
 package RT.Materials;
 
-import RT.HitR;
-import RT.RTutils;
-import RT.Ray;
-import RT.Vec3;
+import RT.Utils.HitR;
+import RT.Utils.RTutils;
+import RT.Utils.Ray;
+import RT.Utils.Vec3;
 
 public class Dielectric extends Material{
     double refIndex;

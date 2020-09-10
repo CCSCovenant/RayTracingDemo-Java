@@ -1,12 +1,11 @@
 package RT.World;
 
-import RT.HitR;
 import RT.Objects.AABB;
 import RT.Objects.Hitable;
-import RT.RTutils;
-import RT.Ray;
+import RT.Utils.HitR;
+import RT.Utils.RTutils;
+import RT.Utils.Ray;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

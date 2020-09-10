@@ -1,4 +1,4 @@
-package RT;
+package RT.Utils;
 
 public class Vec3 {
     public double[] e = new double[3];

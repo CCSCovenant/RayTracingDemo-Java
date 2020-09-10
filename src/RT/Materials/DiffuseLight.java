@@ -1,10 +1,7 @@
 package RT.Materials;
 
-import RT.HitR;
-import RT.RTutils;
-import RT.Ray;
 import RT.Texture.Texture;
-import RT.Vec3;
+import RT.Utils.Vec3;
 
 public class DiffuseLight extends Material {
     Texture texture;

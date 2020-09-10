@@ -1,8 +1,8 @@
-package RT;
+package RT.Utils;
 
 
+import RT.World.Camera;
 import RT.World.BVHnode;
-import RT.World.HitableList;
 
 public class PixelWorker extends Thread {
     Vec3[][] buffer;

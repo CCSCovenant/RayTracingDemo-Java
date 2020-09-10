@@ -1,7 +1,6 @@
 package RT.Texture;
 
-import RT.Texture.Texture;
-import RT.Vec3;
+import RT.Utils.Vec3;
 
 public class CheckerTexture extends Texture {
     Vec3 odd;

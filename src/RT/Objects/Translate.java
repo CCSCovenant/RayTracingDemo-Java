@@ -1,8 +1,8 @@
 package RT.Objects;
 
-import RT.HitR;
-import RT.Ray;
-import RT.Vec3;
+import RT.Utils.HitR;
+import RT.Utils.Ray;
+import RT.Utils.Vec3;
 
 public class Translate extends Hitable{
     Hitable obj;

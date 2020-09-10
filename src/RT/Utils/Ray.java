@@ -1,4 +1,6 @@
-package RT;
+package RT.Utils;
+
+import RT.Utils.Vec3;
 
 public class Ray {
     public Vec3 origin;

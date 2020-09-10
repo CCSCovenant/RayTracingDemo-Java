@@ -1,6 +1,6 @@
 package RT.Texture;
 
-import RT.Vec3;
+import RT.Utils.Vec3;
 
 public class PureColorTexture extends Texture {
     Vec3 color;

@@ -1,10 +1,10 @@
 package RT.Materials;
 
-import RT.HitR;
-import RT.RTutils;
-import RT.Ray;
+import RT.Utils.HitR;
+import RT.Utils.RTutils;
+import RT.Utils.Ray;
 import RT.Texture.Texture;
-import RT.Vec3;
+import RT.Utils.Vec3;
 
 public class Metal extends Material{
     Texture texture;

@@ -1,8 +1,8 @@
 package RT.Materials;
 
-import RT.HitR;
-import RT.Ray;
-import RT.Vec3;
+import RT.Utils.HitR;
+import RT.Utils.Ray;
+import RT.Utils.Vec3;
 
 public abstract class Material {
     public Material(){

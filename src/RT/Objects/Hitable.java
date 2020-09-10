@@ -1,7 +1,7 @@
 package RT.Objects;
 
-import RT.HitR;
-import RT.Ray;
+import RT.Utils.HitR;
+import RT.Utils.Ray;
 
 public abstract class Hitable  {
 

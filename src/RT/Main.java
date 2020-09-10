@@ -3,9 +3,11 @@ package RT;
 import RT.Materials.*;
 import RT.Objects.*;
 import RT.Materials.Lambertian;
-import RT.Texture.ImageTexture;
 import RT.Texture.PureColorTexture;
+import RT.Utils.PixelWorker;
+import RT.Utils.Vec3;
 import RT.World.BVHnode;
+import RT.World.Camera;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -21,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class Main extends Application {

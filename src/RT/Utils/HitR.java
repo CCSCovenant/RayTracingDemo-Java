@@ -1,4 +1,4 @@
-package RT;
+package RT.Utils;
 
 
 import RT.Materials.Material;

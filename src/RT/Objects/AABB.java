@@ -1,7 +1,7 @@
 package RT.Objects;
 
-import RT.Ray;
-import RT.Vec3;
+import RT.Utils.Ray;
+import RT.Utils.Vec3;
 
 public class AABB {
     public Vec3 minP; // 坐标较小的点
