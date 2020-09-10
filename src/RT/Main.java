@@ -1,11 +1,9 @@
 package RT;
 
 import RT.Materials.*;
-import RT.Objects.Hitable;
+import RT.Objects.*;
 import RT.Materials.Lambertian;
-import RT.Objects.XyRect;
-import RT.Objects.XzRect;
-import RT.Objects.YzRect;
+import RT.Texture.ImageTexture;
 import RT.Texture.PureColorTexture;
 import RT.World.BVHnode;
 import javafx.application.Application;
@@ -23,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class Main extends Application {
@@ -61,7 +60,7 @@ public class Main extends Application {
         BVHnode world = new BVHnode(scene,t0,t1);
 
 
-        int spp = 1000;
+        int spp = 50;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -119,7 +118,7 @@ public class Main extends Application {
                 IOimage.setRGB(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
             }
         }
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\CornellBox-Empty.png"));
+        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\CornellBox-WithBoxes.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -140,13 +139,15 @@ public class Main extends Application {
         return cam;
 
     }
-    public ArrayList<Hitable> CornellBox(){
+    public ArrayList<Hitable> CornellBox() throws IOException {
         ArrayList<Hitable> world = new ArrayList<Hitable>();
 
         Material red = new Lambertian(new PureColorTexture(new Vec3(0.65,0.05,0.05)));
         Material white = new Lambertian(new PureColorTexture(new Vec3(0.73,0.73,0.73)));
         Material green = new Lambertian(new PureColorTexture(new Vec3(0.12,0.45,0.05)));
         Material light = new DiffuseLight(new PureColorTexture(new Vec3(15,15,15)));
+        //ImageTexture Earth = new ImageTexture("C:\\Users\\pzeug\\RT\\src\\TextureFiles\\earth.jpg");
+        //world.add(new Sphere(new Vec3(278, 278, 350), 100, new Metal(Earth,0.8)));
 
         world.add(new YzRect(0,555,0,555,555,green));
         world.add(new YzRect(0,555,0,555,0,red));
@@ -154,6 +155,15 @@ public class Main extends Application {
         world.add(new XzRect(0,555,0,555,0,white));
         world.add(new XzRect(0,555,0,555,555,white));
         world.add(new XyRect(0,555,0,555,555,white));
+        Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0.2);
+
+        Material[] whitebox = new Material[6];
+        for(int i=0;i<6;i++){
+            whitebox[i] = whiteMetal;
+        }
+        world.add(new Box(new Vec3(130,0,65),new Vec3(295,165,230),whitebox));
+        world.add(new Box(new Vec3(265,0,295),new Vec3(430,330,460),whitebox));
+
 
         return world;
     }
