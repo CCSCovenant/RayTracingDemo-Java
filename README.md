@@ -1,9 +1,9 @@
-#Ray Tracing Demo
+# Ray Tracing Demo
 CCS's ray tracer based on Java.
 
 
-####Features:
-**objects:**\
+#### Features:
+**Objects:**\
 1.sphere\
 2.box and rectangle surface\
 //TODO: triangle and .obj file support
@@ -23,5 +23,5 @@ CCS's ray tracer based on Java.
 //TODO use SAH to construct BVH tree.
 
 ---
-**Some Output:**
+**Some Output:**\
 ![alt=image](https://github.com/CCSClassBattlecruiser/RayTracingDemo-Java/blob/master/output/CornellBox-Boxes-Rotated.png?raw=true)
