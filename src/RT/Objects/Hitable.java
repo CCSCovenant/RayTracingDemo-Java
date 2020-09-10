@@ -3,12 +3,13 @@ package RT.Objects;
 import RT.Utils.HitR;
 import RT.Utils.Ray;
 
-public abstract class Hitable  {
+public abstract class Hitable {
 
-    public Hitable(){
+    public Hitable() {
 
     }
-    public boolean hit(Ray r, double minT, double maxT, HitR rec){
+
+    public boolean hit(Ray r, double minT, double maxT, HitR rec) {
         return false;
     }
     // 判断光线 r 在时间 [minT,maxT] 是否和物体相交

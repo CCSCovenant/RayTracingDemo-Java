@@ -33,12 +33,12 @@ public class XyRect extends Hitable {
         if (x < x0 || x > x1 || y < y0 || y > y1) {
             return false;
         }
-        rec.u = (x-x0)/(x1-x0);
-        rec.v = (y-y0)/(y1-y0);
+        rec.u = (x - x0) / (x1 - x0);
+        rec.v = (y - y0) / (y1 - y0);
         rec.t = t;
         rec.m = this.m;
-        Vec3 outWardNormal = new Vec3(0,0,1);
-        rec.setFaceNormal(r,outWardNormal);
+        Vec3 outWardNormal = new Vec3(0, 0, 1);
+        rec.setFaceNormal(r, outWardNormal);
         rec.p = r.Pt(t);
         return true;
     }

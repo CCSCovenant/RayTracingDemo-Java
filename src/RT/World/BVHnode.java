@@ -15,9 +15,9 @@ public class BVHnode extends Hitable {
     Hitable leftNode;
     Hitable rightNode;
 
-    public BVHnode(List<Hitable> Objects, double t0, double t1){
+    public BVHnode(List<Hitable> Objects, double t0, double t1) {
         this.Boundingbox = new AABB();
-        if (Objects.size()>2){
+        if (Objects.size() > 2) {
             int axis;
 
             double MaxAxisX = Double.NEGATIVE_INFINITY;
@@ -27,24 +27,24 @@ public class BVHnode extends Hitable {
             double MinAxisY = Double.POSITIVE_INFINITY;
             double MinAxisZ = Double.POSITIVE_INFINITY;
 
-            for (int i=0;i<Objects.size();i++){
-                MaxAxisX = Math.max(Objects.get(i).boundingBox(t0, t1).maxP.e[0],MaxAxisX);
-                MaxAxisY = Math.max(Objects.get(i).boundingBox(t0, t1).maxP.e[1],MaxAxisY);
-                MaxAxisZ = Math.max(Objects.get(i).boundingBox(t0, t1).maxP.e[2],MaxAxisZ);
-                MinAxisX = Math.min(Objects.get(i).boundingBox(t0, t1).maxP.e[0],MinAxisX);
-                MinAxisY = Math.min(Objects.get(i).boundingBox(t0, t1).maxP.e[1],MinAxisY);
-                MinAxisZ = Math.min(Objects.get(i).boundingBox(t0, t1).maxP.e[2],MinAxisZ);
+            for (int i = 0; i < Objects.size(); i++) {
+                MaxAxisX = Math.max(Objects.get(i).boundingBox(t0, t1).maxP.e[0], MaxAxisX);
+                MaxAxisY = Math.max(Objects.get(i).boundingBox(t0, t1).maxP.e[1], MaxAxisY);
+                MaxAxisZ = Math.max(Objects.get(i).boundingBox(t0, t1).maxP.e[2], MaxAxisZ);
+                MinAxisX = Math.min(Objects.get(i).boundingBox(t0, t1).maxP.e[0], MinAxisX);
+                MinAxisY = Math.min(Objects.get(i).boundingBox(t0, t1).maxP.e[1], MinAxisY);
+                MinAxisZ = Math.min(Objects.get(i).boundingBox(t0, t1).maxP.e[2], MinAxisZ);
             }
 
 
-            double diffx = MaxAxisX-MinAxisX;
-            double diffy = MaxAxisY-MinAxisY;
-            double diffz = MaxAxisZ-MinAxisZ;
-            if (diffx>diffy&&diffx>diffz){
+            double diffx = MaxAxisX - MinAxisX;
+            double diffy = MaxAxisY - MinAxisY;
+            double diffz = MaxAxisZ - MinAxisZ;
+            if (diffx > diffy && diffx > diffz) {
                 axis = 0;
-            }else if (diffy>diffx&&diffy>diffz){
+            } else if (diffy > diffx && diffy > diffz) {
                 axis = 1;
-            }else {
+            } else {
                 axis = 2;
             }
 
@@ -53,60 +53,61 @@ public class BVHnode extends Hitable {
             Comparator<Hitable> AxisComparator = new Comparator<Hitable>() {
                 @Override
                 public int compare(Hitable o1, Hitable o2) {
-                    if (o1.boundingBox(t0,t1).minP.e[axis]<o2.boundingBox(t0, t1).minP.e[axis]){
+                    if (o1.boundingBox(t0, t1).minP.e[axis] < o2.boundingBox(t0, t1).minP.e[axis]) {
                         return 1;
-                    }else if (o1.boundingBox(t0,t1).minP.e[axis]>o2.boundingBox(t0, t1).minP.e[axis]){
+                    } else if (o1.boundingBox(t0, t1).minP.e[axis] > o2.boundingBox(t0, t1).minP.e[axis]) {
                         return -1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
             };
-            Collections.sort(Objects,AxisComparator);
-            int mid = Objects.size()/2;
+            Collections.sort(Objects, AxisComparator);
+            int mid = Objects.size() / 2;
 
-            leftNode = new BVHnode(Objects.subList(0,mid),t0,t1);
-            rightNode = new BVHnode(Objects.subList(mid,Objects.size()),t0,t1);
+            leftNode = new BVHnode(Objects.subList(0, mid), t0, t1);
+            rightNode = new BVHnode(Objects.subList(mid, Objects.size()), t0, t1);
 
             AABB LeftBB = leftNode.boundingBox(t0, t1);
             AABB RightBB = rightNode.boundingBox(t0, t1);
-            AABB TmpBB = RTutils.surroundingBox(LeftBB,RightBB);
+            AABB TmpBB = RTutils.surroundingBox(LeftBB, RightBB);
             this.Boundingbox.copyValue(TmpBB);
 
-        }else {
-            if (Objects.size()==1){
+        } else {
+            if (Objects.size() == 1) {
                 leftNode = Objects.get(0);
-                this.Boundingbox.copyValue(leftNode.boundingBox(t0,t1));
-            }else if (Objects.size()==2){
+                this.Boundingbox.copyValue(leftNode.boundingBox(t0, t1));
+            } else if (Objects.size() == 2) {
                 leftNode = Objects.get(0);
                 rightNode = Objects.get(1);
-                this.Boundingbox.copyValue(RTutils.surroundingBox(leftNode.boundingBox(t0,t1),rightNode.boundingBox(t0,t1)));
+                this.Boundingbox.copyValue(RTutils.surroundingBox(leftNode.boundingBox(t0, t1), rightNode.boundingBox(t0, t1)));
             }
         }
     }
+
     @Override
-    public boolean hit(Ray r, double minT, double maxT, HitR rec){
-        if (!Boundingbox.hit(r,minT,maxT)){
+    public boolean hit(Ray r, double minT, double maxT, HitR rec) {
+        if (!Boundingbox.hit(r, minT, maxT)) {
             return false;
-        }else {
+        } else {
             boolean hitLeft = false;
             boolean hitRight = false;
-            if (leftNode!=null) {
+            if (leftNode != null) {
                 hitLeft = leftNode.hit(r, minT, maxT, rec);
             }
-            if (rightNode!=null) {
+            if (rightNode != null) {
                 hitRight = rightNode.hit(r, minT, hitLeft ? rec.t : maxT, rec);
             }
-            return hitLeft||hitRight;
+            return hitLeft || hitRight;
         }
     }
+
     @Override
     public AABB boundingBox(double t0, double t1) {
         AABB tmp = new AABB();
         tmp.copyValue(this.Boundingbox);
         return tmp;
     }
-
 
 
 }

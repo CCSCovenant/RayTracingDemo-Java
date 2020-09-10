@@ -33,18 +33,18 @@ public class YzRect extends Hitable {
         if (y < y0 || y > y1 || z < z0 || z > z1) {
             return false;
         }
-        rec.u = (x-y0)/(y1-y0);
-        rec.v = (z-z0)/(z1-z0);
+        rec.u = (x - y0) / (y1 - y0);
+        rec.v = (z - z0) / (z1 - z0);
         rec.t = t;
         rec.m = this.m;
-        Vec3 outWardNormal = new Vec3(1,0,0);
-        rec.setFaceNormal(r,outWardNormal);
+        Vec3 outWardNormal = new Vec3(1, 0, 0);
+        rec.setFaceNormal(r, outWardNormal);
         rec.p = r.Pt(t);
         return true;
     }
 
     @Override
     public AABB boundingBox(double t0, double t1) {
-        return new AABB(new Vec3(x-0.0001, y0, z0), new Vec3(x+0.0001, y1, z1));
+        return new AABB(new Vec3(x - 0.0001, y0, z0), new Vec3(x + 0.0001, y1, z1));
     }
 }

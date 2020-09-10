@@ -55,32 +55,32 @@ public class Main extends Application {
 
         double t0 = 0;
         double t1 = 0;
-          ArrayList<Hitable> scene = CornellBox();
-          Camera cam = CornellBoxCam();
+        ArrayList<Hitable> scene = CornellBox();
+        Camera cam = CornellBoxCam();
         //HitableList world = TestScene();
-        BVHnode world = new BVHnode(scene,t0,t1);
+        BVHnode world = new BVHnode(scene, t0, t1);
 
 
         int spp = 1000;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
-        for (int y=0;y<H;y++){
-            for (int x=0;x<W;x++){
+        for (int y = 0; y < H; y++) {
+            for (int x = 0; x < W; x++) {
                 PixelBuffer[x][y] = new Vec3();
             }
         }
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < Thread; i++) {
-            WorkerPool[i] = new PixelWorker(PixelBuffer,cam,world,i*(H/Thread),Math.min(H,(i+1)*(H/Thread)),W,H,MaxDepth,spp,i);
+            WorkerPool[i] = new PixelWorker(PixelBuffer, cam, world, i * (H / Thread), Math.min(H, (i + 1) * (H / Thread)), W, H, MaxDepth, spp, i);
             WorkerPool[i].start();
         }
-        System.out.println(Thread+" PixelWorkers start render");
-        for (int i=0;i<Thread;i++){
+        System.out.println(Thread + " PixelWorkers start render");
+        for (int i = 0; i < Thread; i++) {
             try {
                 WorkerPool[i].join();
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
@@ -101,81 +101,81 @@ public class Main extends Application {
         long endTime = System.currentTimeMillis();
 
         System.out.println("All PixelWorkers Finished");
-        System.out.println("Render finished in "+(endTime-startTime)+"ms");
+        System.out.println("Render finished in " + (endTime - startTime) + "ms");
         BufferedImage IOimage = new BufferedImage(W, H, BufferedImage.TYPE_4BYTE_ABGR);
         System.out.println("Writing PixelBuffer into image");
 
-        for (int y=H-1;y>=0;y--){
-            for (int x=0;x<W;x++){
+        for (int y = H - 1; y >= 0; y--) {
+            for (int x = 0; x < W; x++) {
                 double Ar = Math.sqrt(PixelBuffer[x][y].x());
                 double Ag = Math.sqrt(PixelBuffer[x][y].y());
                 double Ab = Math.sqrt(PixelBuffer[x][y].z());
 
 
-
-                int Red = clamp(0,255,(int)(Ar*255));
-                int Green = clamp(0,255,(int)(Ag*255));
-                int Blue = clamp(0,255,(int)(Ab*255));
-                pw.setArgb(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
-                IOimage.setRGB(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
+                int Red = clamp(0, 255, (int) (Ar * 255));
+                int Green = clamp(0, 255, (int) (Ag * 255));
+                int Blue = clamp(0, 255, (int) (Ab * 255));
+                pw.setArgb(x, (H - (y + 1)), new Color(Red, Green, Blue, 255).getRGB());
+                IOimage.setRGB(x, (H - (y + 1)), new Color(Red, Green, Blue, 255).getRGB());
             }
         }
         System.out.println("Finished");
 
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\output\\CornellBox-Boxes-Rotated.png"));
+        ImageIO.write(IOimage, "png", new File("C:\\Users\\pzeug\\RT\\output\\CornellBox-Boxes-Rotated.png"));
         gc.drawImage(image, 0, 0);
     }
 
-    public int clamp(int min,int max ,int n){
-        if (n<min){
+    public int clamp(int min, int max, int n) {
+        if (n < min) {
             return min;
-        }else if (n>max){
+        } else if (n > max) {
             return max;
-        }else {
+        } else {
             return n;
         }
     }
-    public Camera CornellBoxCam(){
-        Vec3 lookfrom = new Vec3(278,278,-800);
-        Vec3 lookat = new Vec3(278 ,278,0);
-        Vec3 vup = new Vec3(0,1,0);
-        Camera cam = new Camera(40,1,0,10,0,0,lookfrom,lookat,vup);
+
+    public Camera CornellBoxCam() {
+        Vec3 lookfrom = new Vec3(278, 278, -800);
+        Vec3 lookat = new Vec3(278, 278, 0);
+        Vec3 vup = new Vec3(0, 1, 0);
+        Camera cam = new Camera(40, 1, 0, 10, 0, 0, lookfrom, lookat, vup);
         return cam;
 
     }
+
     public ArrayList<Hitable> CornellBox() throws IOException {
         ArrayList<Hitable> world = new ArrayList<Hitable>();
 
-        Material red = new Lambertian(new PureColorTexture(new Vec3(0.65,0.05,0.05)));
-        Material white = new Lambertian(new PureColorTexture(new Vec3(0.73,0.73,0.73)));
-        Material green = new Lambertian(new PureColorTexture(new Vec3(0.12,0.45,0.05)));
-        Material light = new DiffuseLight(new PureColorTexture(new Vec3(15,15,20)));
+        Material red = new Lambertian(new PureColorTexture(new Vec3(0.65, 0.05, 0.05)));
+        Material white = new Lambertian(new PureColorTexture(new Vec3(0.73, 0.73, 0.73)));
+        Material green = new Lambertian(new PureColorTexture(new Vec3(0.12, 0.45, 0.05)));
+        Material light = new DiffuseLight(new PureColorTexture(new Vec3(15, 15, 20)));
         //ImageTexture Earth = new ImageTexture("C:\\Users\\pzeug\\RT\\src\\TextureFiles\\earth.jpg");
         //world.add(new Sphere(new Vec3(278, 278, 350), 100, new Metal(Earth,0.8)));
 
-        world.add(new YzRect(0,555,0,555,555,green));
-        world.add(new YzRect(0,555,0,555,0,red));
-        world.add(new XzRect(213,343,227,332,554,light));
-        world.add(new XzRect(0,555,0,555,0,white));
-        world.add(new XzRect(0,555,0,555,555,white));
-        world.add(new XyRect(0,555,0,555,555,white));
-       // Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0.2);
+        world.add(new YzRect(0, 555, 0, 555, 555, green));
+        world.add(new YzRect(0, 555, 0, 555, 0, red));
+        world.add(new XzRect(213, 343, 227, 332, 554, light));
+        world.add(new XzRect(0, 555, 0, 555, 0, white));
+        world.add(new XzRect(0, 555, 0, 555, 555, white));
+        world.add(new XyRect(0, 555, 0, 555, 555, white));
+        // Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0.2);
 
         Material[] whitebox = new Material[6];
-        for(int i=0;i<6;i++){
+        for (int i = 0; i < 6; i++) {
             whitebox[i] = white;
         }
-        Box box1 = new Box(new Vec3(0,0,0),new Vec3(165,330,165),whitebox);
-        Rotate rotatebox1 = new Rotate(box1,1,15);
-        Translate movedBox1 = new Translate(rotatebox1,new Vec3(265,0,295));
+        Box box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), whitebox);
+        Rotate rotatebox1 = new Rotate(box1, 1, 15);
+        Translate movedBox1 = new Translate(rotatebox1, new Vec3(265, 0, 295));
 
-        Box box2 = new Box(new Vec3(0,0,0),new Vec3(165,165,165),whitebox);
-        Rotate rotatebox2 = new Rotate(box2,1,-18);
-        Translate movedBox2 = new Translate(rotatebox2,new Vec3(130,0,65));
+        Box box2 = new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), whitebox);
+        Rotate rotatebox2 = new Rotate(box2, 1, -18);
+        Translate movedBox2 = new Translate(rotatebox2, new Vec3(130, 0, 65));
 
         world.add(movedBox1);
         world.add(movedBox2);
-
 
 
         return world;
@@ -257,7 +257,6 @@ public class Main extends Application {
         Vec3 blue = new Vec3(0.5,0.7,1.0);
         return white.mul(1.0-t).add(blue.mul(t));
     }*/
-
 
 
 }

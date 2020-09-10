@@ -66,28 +66,28 @@ public class Rotate extends Hitable {
         d.copyValue(r.direction);
         //旋转后的光线原点
         if (axis == 0) {
-            o.e[1] = cosTheta*r.origin.e[1] - sinTheta*r.origin.e[2];
-            o.e[2] = sinTheta*r.origin.e[1] + cosTheta*r.origin.e[2];
+            o.e[1] = cosTheta * r.origin.e[1] - sinTheta * r.origin.e[2];
+            o.e[2] = sinTheta * r.origin.e[1] + cosTheta * r.origin.e[2];
         } else if (axis == 1) {
-            o.e[0] = cosTheta*r.origin.e[0] - sinTheta*r.origin.e[2];
-            o.e[2] = sinTheta*r.origin.e[0] + cosTheta*r.origin.e[2];
+            o.e[0] = cosTheta * r.origin.e[0] - sinTheta * r.origin.e[2];
+            o.e[2] = sinTheta * r.origin.e[0] + cosTheta * r.origin.e[2];
         } else {
-            o.e[0] = cosTheta*r.origin.e[0] - sinTheta*r.origin.e[1];
-            o.e[1] = sinTheta*r.origin.e[0] + cosTheta*r.origin.e[1];
+            o.e[0] = cosTheta * r.origin.e[0] - sinTheta * r.origin.e[1];
+            o.e[1] = sinTheta * r.origin.e[0] + cosTheta * r.origin.e[1];
         }
         //旋转后的光线方向
         if (axis == 0) {
-            d.e[1] = cosTheta*r.direction.e[1] - sinTheta*r.direction.e[2];
-            d.e[2] = sinTheta*r.direction.e[1] + cosTheta*r.direction.e[2];
+            d.e[1] = cosTheta * r.direction.e[1] - sinTheta * r.direction.e[2];
+            d.e[2] = sinTheta * r.direction.e[1] + cosTheta * r.direction.e[2];
         } else if (axis == 1) {
-            d.e[0] = cosTheta*r.direction.e[0] - sinTheta*r.direction.e[2];
-            d.e[2] = sinTheta*r.direction.e[0] + cosTheta*r.direction.e[2];
+            d.e[0] = cosTheta * r.direction.e[0] - sinTheta * r.direction.e[2];
+            d.e[2] = sinTheta * r.direction.e[0] + cosTheta * r.direction.e[2];
         } else {
-            d.e[0] = cosTheta*r.direction.e[0] - sinTheta*r.direction.e[1];
-            d.e[1] = sinTheta*r.direction.e[0] + cosTheta*r.direction.e[1];
+            d.e[0] = cosTheta * r.direction.e[0] - sinTheta * r.direction.e[1];
+            d.e[1] = sinTheta * r.direction.e[0] + cosTheta * r.direction.e[1];
         }
-        Ray rotatedRay = new Ray(o,d,r.time);
-        if (!obj.hit(rotatedRay,minT,maxT,rec)){
+        Ray rotatedRay = new Ray(o, d, r.time);
+        if (!obj.hit(rotatedRay, minT, maxT, rec)) {
             return false;
         }
         Vec3 p = new Vec3();
@@ -97,29 +97,29 @@ public class Rotate extends Hitable {
 
         // 旋转后的命中点
         if (axis == 0) {
-            p.e[1] = cosTheta*rec.p.e[1] + sinTheta*rec.p.e[2];
-            p.e[2] = -sinTheta*rec.p.e[1] + cosTheta*rec.p.e[2];
+            p.e[1] = cosTheta * rec.p.e[1] + sinTheta * rec.p.e[2];
+            p.e[2] = -sinTheta * rec.p.e[1] + cosTheta * rec.p.e[2];
         } else if (axis == 1) {
-            p.e[0] = cosTheta*rec.p.e[0] + sinTheta*rec.p.e[2];
-            p.e[2] = -sinTheta*rec.p.e[0] + cosTheta*rec.p.e[2];
+            p.e[0] = cosTheta * rec.p.e[0] + sinTheta * rec.p.e[2];
+            p.e[2] = -sinTheta * rec.p.e[0] + cosTheta * rec.p.e[2];
         } else {
-            p.e[0] = cosTheta*rec.p.e[0] + sinTheta*rec.p.e[1];
-            p.e[1] = -sinTheta*rec.p.e[0] + cosTheta*rec.p.e[1];
+            p.e[0] = cosTheta * rec.p.e[0] + sinTheta * rec.p.e[1];
+            p.e[1] = -sinTheta * rec.p.e[0] + cosTheta * rec.p.e[1];
         }
 
         //旋转后的法线
         if (axis == 0) {
-            normal.e[1] = cosTheta*rec.normal.e[1] + sinTheta*rec.normal.e[2];
-            normal.e[2] = -sinTheta*rec.normal.e[1] + cosTheta*rec.normal.e[2];
+            normal.e[1] = cosTheta * rec.normal.e[1] + sinTheta * rec.normal.e[2];
+            normal.e[2] = -sinTheta * rec.normal.e[1] + cosTheta * rec.normal.e[2];
         } else if (axis == 1) {
-            normal.e[0] = cosTheta*rec.normal.e[0] + sinTheta*rec.normal.e[2];
-            normal.e[2] = -sinTheta*rec.normal.e[0] + cosTheta*rec.normal.e[2];
+            normal.e[0] = cosTheta * rec.normal.e[0] + sinTheta * rec.normal.e[2];
+            normal.e[2] = -sinTheta * rec.normal.e[0] + cosTheta * rec.normal.e[2];
         } else {
-            normal.e[0] = cosTheta*rec.normal.e[0] + sinTheta*rec.normal.e[1];
-            normal.e[1] = -sinTheta*rec.normal.e[0] + cosTheta*rec.normal.e[1];
+            normal.e[0] = cosTheta * rec.normal.e[0] + sinTheta * rec.normal.e[1];
+            normal.e[1] = -sinTheta * rec.normal.e[0] + cosTheta * rec.normal.e[1];
         }
         rec.p = p;
-        rec.setFaceNormal(rotatedRay,normal);
+        rec.setFaceNormal(rotatedRay, normal);
         return true;
     }
 
