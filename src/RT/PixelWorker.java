@@ -52,24 +52,23 @@ public class PixelWorker extends Thread {
         System.out.println("PixelWork:["+pid+"] finished");
     }
     public Vec3 rayColor(Ray r, BVHnode world, int depth) {
+        Vec3 BGcolor = new Vec3(0,0,0);
         HitR rec = new HitR();
         if (depth<=0){
             return new Vec3(0,0,0);
         }
-        if (world.hit(r,0,Double.POSITIVE_INFINITY,rec)){
-            Ray out = new Ray();
-            Vec3 color = new Vec3();
-            if (rec.m.scatter(r,rec,color,out)){
-                return color.mul(rayColor(out,world,depth-1));
-            }
-            return new Vec3(0,0,0);
+        if (!world.hit(r,0,Double.POSITIVE_INFINITY,rec)) {
+            return BGcolor;
         }
-        Vec3 unitDirection = r.direction.unitVector();
-        double t = 0.5*(unitDirection.y()+1.0);
-        Vec3 white = new Vec3(1.0,1.0,1.0);
-        Vec3 blue = new Vec3(0.5,0.7,1.0);
-        return white.mul(1.0-t).add(blue.mul(t));
+        Ray out = new Ray();
+        Vec3 attenuation = new Vec3();
+        Vec3 emitted = rec.m.emitted(rec.u,rec.v,rec.p);
+        if (!rec.m.scatter(r,rec,attenuation,out)){
+                return emitted;
+        }
+        return emitted.add(attenuation.mul(rayColor(out,world,depth-1)));
     }
+
 
 
 

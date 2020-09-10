@@ -5,13 +5,17 @@ import RT.Materials.Material;
 
 public class HitR {
     public Vec3 p;
-    public double t;
     public Vec3 normal;
     public Material m;
+    public double u;
+    public double v;
+    public double t;
     public boolean front;
     public HitR(){
         p = new Vec3();
         t = 0;
+        u = 0;
+        v = 0;
         normal = new Vec3();
         front = true;
     }
@@ -25,6 +29,8 @@ public class HitR {
         this.p = R.p;
         this.normal = R.normal;
         this.t = R.t;
+        this.u = R.u;
+        this.v = R.v;
         this.front = R.front;
     }
     public void setFaceNormal(Ray r, Vec3 outWardNormal){

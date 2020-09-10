@@ -3,16 +3,17 @@ package RT.Materials;
 import RT.HitR;
 import RT.RTutils;
 import RT.Ray;
+import RT.Texture.Texture;
 import RT.Vec3;
 
 public class Metal extends Material{
-    Vec3 color;
+    Texture texture;
     double fuzz;
     public Metal(){
 
     }
-    public Metal(Vec3 color,double fuzz){
-        this.color = color;
+    public Metal(Texture texture,double fuzz){
+        this.texture = texture;
         this.fuzz = fuzz;
     }
 
@@ -22,7 +23,7 @@ public class Metal extends Material{
         out.origin.copyValue(rec.p);
         out.direction.copyValue(reflected.add(RTutils.RandomInUnitSphere().mul(fuzz)));
         out.time = in.time;
-        color.copyValue(this.color);
+        color.copyValue(texture.Color(rec.u,rec.v,rec.p));
         return out.direction.dot(rec.normal)>0;
     }
 }

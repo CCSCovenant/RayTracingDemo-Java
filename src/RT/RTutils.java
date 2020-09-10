@@ -60,5 +60,14 @@ public final class RTutils {
         Vec3 max = new Vec3(Math.max(box0.maxP.x(),box1.maxP.x()),Math.max(box0.maxP.x(),box1.maxP.x()),Math.max(box0.maxP.x(),box1.maxP.x()));
         return new AABB(min,max);
     }
+    public static double clamp(double x,double min,double max){
+        if (x<min){
+            return min;
+        }
+        if (x>max){
+            return max;
+        }
+        return x;
+    }
     // 输入两个AABB 输出一个将其包围的AABB;
 }

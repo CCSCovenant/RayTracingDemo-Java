@@ -1,13 +1,10 @@
 package RT;
 
-import RT.Materials.Dielectric;
-import RT.Materials.Lambertian;
-import RT.Materials.Metal;
+import RT.Materials.*;
 import RT.Objects.Hitable;
-import RT.Objects.MovingSphere;
-import RT.Objects.Sphere;
+import RT.Materials.Lambertian;
+import RT.Texture.PureColorTexture;
 import RT.World.BVHnode;
-import RT.World.HitableList;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -36,7 +33,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("RayTracing Test");
         Group root = new Group();
-        javafx.scene.canvas.Canvas canvas = new Canvas(800, 600);
+        javafx.scene.canvas.Canvas canvas = new Canvas(400, 300);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Render(gc);
 
@@ -46,24 +43,24 @@ public class Main extends Application {
     }
 
     private void Render(GraphicsContext gc) throws IOException {
-        int W = 800;
-        int H = 600;
+        int W = 400;
+        int H = 300;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
 
         Vec3 lookfrom = new Vec3(13,2,3);
-        Vec3 lookat = new Vec3(0,0,0);
+        Vec3 lookat = new Vec3(0,1,0);
         Vec3 vup = new Vec3(0,1,0);
         double t0 = 0;
         double t1 = 0;
         Camera cam = new Camera(20,8.0/6.0,0.1,10,t0,t1,lookfrom,lookat,vup);
-        ArrayList<Hitable> scene = TestScene();
+        ArrayList<Hitable> scene = Cornell_Box();
         //HitableList world = TestScene();
         BVHnode world = new BVHnode(scene,t0,t1);
 
 
-        int spp = 100;
+        int spp = 200;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -108,14 +105,20 @@ public class Main extends Application {
 
         for (int y=H-1;y>=0;y--){
             for (int x=0;x<W;x++){
-                int Red = clamp(0,255,(int)(PixelBuffer[x][y].x()*255));
-                int Green = clamp(0,255,(int)(PixelBuffer[x][y].y()*255));
-                int Blue = clamp(0,255,(int)(PixelBuffer[x][y].z()*255));
+                double Ar = Math.sqrt(PixelBuffer[x][y].x());
+                double Ag = Math.sqrt(PixelBuffer[x][y].y());
+                double Ab = Math.sqrt(PixelBuffer[x][y].z());
+
+
+
+                int Red = clamp(0,255,(int)(Ar*255));
+                int Green = clamp(0,255,(int)(Ag*255));
+                int Blue = clamp(0,255,(int)(Ab*255));
                 pw.setArgb(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
                 IOimage.setRGB(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
             }
         }
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\TestScene2.png"));
+        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\TextureTest-Earth.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -128,20 +131,47 @@ public class Main extends Application {
             return n;
         }
     }
+    public ArrayList<Hitable> Cornell_Box(){
+        ArrayList<Hitable> world = new ArrayList<Hitable>();
 
+        Material red = new Lambertian(new PureColorTexture(new Vec3(0.65,0.05,0.05)));
+        Material green = new Lambertian(new PureColorTexture(new Vec3(0.73,0.73,0.73)));
+        Material white = new Lambertian(new PureColorTexture(new Vec3(0.12,0.45,0.05)));
+        return world;
+    }
+
+    /*
+    public ArrayList<Hitable> TestScene() throws IOException {
+        ArrayList<Hitable> world = new ArrayList<Hitable>();
+        ImageTexture Earth = new ImageTexture("C:\\Users\\pzeug\\RT\\src\\TextureFiles\\earth.jpg");
+        world.add(new Sphere(new Vec3(0, 1, 0), 1, new Lambertian(Earth)));
+        return world;
+    }
+    /*
+    public ArrayList<Hitable> TestScene(){
+        ArrayList<Hitable> world = new ArrayList<Hitable>();
+        RandomGrayTexture GroundTexture = new RandomGrayTexture();
+        world.add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5,0)));
+        world.add(new Sphere(new Vec3(0, -1000, -1), 1000, new Lambertian(GroundTexture)));
+        return world;
+    }
+
+    /*
 
     public ArrayList<Hitable> TestScene(){
         ArrayList<Hitable> world = new ArrayList<Hitable>();
+        CheckerTexture GroundTexture = new CheckerTexture(new Vec3(0.3,0.5,0.9),new Vec3(1.0,1.0,1.0));
         world.add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5,0)));
-        world.add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(0.3, 1, 0.2))));
-        world.add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(1, 0.9, 1),0)));
-        world.add(new Sphere(new Vec3(0, -1000, -1), 1000, new Lambertian(new Vec3(0.9, 0.9, 0.9))));
+        world.add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new PureColorTexture(new Vec3(0.3, 1, 0.2)))));
+        world.add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new PureColorTexture(new Vec3(0.9,0.4,0.6)),0)));
+        world.add(new Sphere(new Vec3(0, -1000, -1), 1000, new Lambertian(GroundTexture)));
         for (int x = -11;x<11;x++){
             for (int z = -11;z<11;z++){
 
                 Vec3 center = new Vec3(x,0.2,z);
                 Vec3 color = new Vec3(Math.random(),Math.random(),Math.random());
-                world.add(new Sphere(center,0.2,new Lambertian(color)));
+                PureColorTexture smallBallColor = new PureColorTexture(color);
+                world.add(new Sphere(center,0.2,new Lambertian(smallBallColor)));
 
             }
         }
@@ -166,7 +196,7 @@ public class Main extends Application {
         return world;
     }*/
 
-
+    /*
     public Vec3 rayColor(Ray r, BVHnode world, int depth) {
         HitR rec = new HitR();
         if (depth<=0){
@@ -185,7 +215,7 @@ public class Main extends Application {
         Vec3 white = new Vec3(1.0,1.0,1.0);
         Vec3 blue = new Vec3(0.5,0.7,1.0);
         return white.mul(1.0-t).add(blue.mul(t));
-    }
+    }*/
 
 
 
