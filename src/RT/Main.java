@@ -60,7 +60,7 @@ public class Main extends Application {
         BVHnode world = new BVHnode(scene,t0,t1);
 
 
-        int spp = 200;
+        int spp = 1000;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -121,7 +121,7 @@ public class Main extends Application {
         }
         System.out.println("Finished");
 
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\CornellBox-WithLambertianBoxes-Bluelight.png"));
+        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\output\\CornellBox-Boxes-Rotated.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -164,8 +164,17 @@ public class Main extends Application {
         for(int i=0;i<6;i++){
             whitebox[i] = white;
         }
-        world.add(new Box(new Vec3(130,0,65),new Vec3(295,165,230),whitebox));
-        world.add(new Box(new Vec3(265,0,295),new Vec3(430,330,460),whitebox));
+        Box box1 = new Box(new Vec3(0,0,0),new Vec3(165,330,165),whitebox);
+        Rotate rotatebox1 = new Rotate(box1,1,15);
+        Translate movedBox1 = new Translate(rotatebox1,new Vec3(265,0,295));
+
+        Box box2 = new Box(new Vec3(0,0,0),new Vec3(165,165,165),whitebox);
+        Rotate rotatebox2 = new Rotate(box2,1,-18);
+        Translate movedBox2 = new Translate(rotatebox2,new Vec3(130,0,65));
+
+        world.add(movedBox1);
+        world.add(movedBox2);
+
 
 
         return world;
