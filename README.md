@@ -2,37 +2,24 @@
 CCS's ray tracer based on Java.
 
 
-Features:
-
-----
-**objects:**
-
+####Features:
+**objects:**\
 1.sphere\
-2.box and rectangle surface
-
+2.box and rectangle surface\
 //TODO: triangle and .obj file support
 
-----
-**Materials:**
-
+**Materials:**\
 1.Dielectric Materials\
 2.Lambertian Materials\
-3.Metal Materials
-
+3.Metal Materials\
 //TODO: Dielectric Materials with color
 
-----
-
-**Texture:**
-
+**Texture:**\
 1.PureColor Texture\
 2.Image Texture
 
-----
-**World:**
-
-1.BVH acceleration
-
+**World:**\
+1.BVH acceleration\
 //TODO use SAH to construct BVH tree.
 
 ---
