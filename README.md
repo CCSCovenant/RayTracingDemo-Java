@@ -1,8 +1,8 @@
-#Ray Tracing Demo
+# Ray Tracing Demo
 CCS's ray tracer based on Java.
 
 
-####Features:
+#### Features:
 **objects:**\
 1.sphere\
 2.box and rectangle surface\
