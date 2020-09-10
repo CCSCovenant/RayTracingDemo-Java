@@ -60,7 +60,7 @@ public class Main extends Application {
         BVHnode world = new BVHnode(scene,t0,t1);
 
 
-        int spp = 50;
+        int spp = 200;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -75,7 +75,7 @@ public class Main extends Application {
             WorkerPool[i] = new PixelWorker(PixelBuffer,cam,world,i*(H/Thread),Math.min(H,(i+1)*(H/Thread)),W,H,MaxDepth,spp,i);
             WorkerPool[i].start();
         }
-        System.out.println("Writing PixelBuffer into image");
+        System.out.println(Thread+" PixelWorkers start render");
         for (int i=0;i<Thread;i++){
             try {
                 WorkerPool[i].join();
@@ -102,6 +102,7 @@ public class Main extends Application {
         System.out.println("All PixelWorkers Finished");
         System.out.println("Render finished in "+(endTime-startTime)+"ms");
         BufferedImage IOimage = new BufferedImage(W, H, BufferedImage.TYPE_4BYTE_ABGR);
+        System.out.println("Writing PixelBuffer into image");
 
         for (int y=H-1;y>=0;y--){
             for (int x=0;x<W;x++){
@@ -118,7 +119,9 @@ public class Main extends Application {
                 IOimage.setRGB(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
             }
         }
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\CornellBox-WithBoxes.png"));
+        System.out.println("Finished");
+
+        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\CornellBox-WithLambertianBoxes-Bluelight.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -145,7 +148,7 @@ public class Main extends Application {
         Material red = new Lambertian(new PureColorTexture(new Vec3(0.65,0.05,0.05)));
         Material white = new Lambertian(new PureColorTexture(new Vec3(0.73,0.73,0.73)));
         Material green = new Lambertian(new PureColorTexture(new Vec3(0.12,0.45,0.05)));
-        Material light = new DiffuseLight(new PureColorTexture(new Vec3(15,15,15)));
+        Material light = new DiffuseLight(new PureColorTexture(new Vec3(15,15,20)));
         //ImageTexture Earth = new ImageTexture("C:\\Users\\pzeug\\RT\\src\\TextureFiles\\earth.jpg");
         //world.add(new Sphere(new Vec3(278, 278, 350), 100, new Metal(Earth,0.8)));
 
@@ -155,11 +158,11 @@ public class Main extends Application {
         world.add(new XzRect(0,555,0,555,0,white));
         world.add(new XzRect(0,555,0,555,555,white));
         world.add(new XyRect(0,555,0,555,555,white));
-        Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0.2);
+       // Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0.2);
 
         Material[] whitebox = new Material[6];
         for(int i=0;i<6;i++){
-            whitebox[i] = whiteMetal;
+            whitebox[i] = white;
         }
         world.add(new Box(new Vec3(130,0,65),new Vec3(295,165,230),whitebox));
         world.add(new Box(new Vec3(265,0,295),new Vec3(430,330,460),whitebox));
