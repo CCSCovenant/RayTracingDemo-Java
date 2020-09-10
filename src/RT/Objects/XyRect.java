@@ -36,6 +36,7 @@ public class XyRect extends Hitable {
         rec.u = (x-x0)/(x1-x0);
         rec.v = (y-y0)/(y1-y0);
         rec.t = t;
+        rec.m = this.m;
         Vec3 outWardNormal = new Vec3(0,0,1);
         rec.setFaceNormal(r,outWardNormal);
         rec.p = r.Pt(t);

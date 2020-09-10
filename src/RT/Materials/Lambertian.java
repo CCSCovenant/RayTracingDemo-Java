@@ -16,7 +16,6 @@ public class Lambertian extends Material {
         out.direction = direction;
         out.time = in.time;
         color.copyValue(texture.Color(rec.u,rec.v,rec.p));
-
         return true;
     }
 }

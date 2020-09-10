@@ -40,7 +40,8 @@ public class PixelWorker extends Thread {
                for (int i=0;i<spp;i++){
                    double u = (x + Math.random()) / W;
                    double v = (y + Math.random()) / H;
-                   buffer[x][y] = buffer[x][y].add(rayColor(cam.getRay(u,v),world,depth));
+                   Vec3 color = rayColor(cam.getRay(u,v),world,depth);
+                   buffer[x][y] = buffer[x][y].add(color);
                }
                buffer[x][y] = buffer[x][y].div(spp);
              //  System.out.println("Color in ["+x+"] ["+y+"] is "+buffer[x][y].x()+" "+buffer[x][y].y()+" "+buffer[x][y].z());
@@ -57,7 +58,7 @@ public class PixelWorker extends Thread {
         if (depth<=0){
             return new Vec3(0,0,0);
         }
-        if (!world.hit(r,0,Double.POSITIVE_INFINITY,rec)) {
+        if (!world.hit(r,0.001,Double.POSITIVE_INFINITY,rec)) {
             return BGcolor;
         }
         Ray out = new Ray();

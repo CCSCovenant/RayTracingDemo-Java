@@ -3,6 +3,9 @@ package RT;
 import RT.Materials.*;
 import RT.Objects.Hitable;
 import RT.Materials.Lambertian;
+import RT.Objects.XyRect;
+import RT.Objects.XzRect;
+import RT.Objects.YzRect;
 import RT.Texture.PureColorTexture;
 import RT.World.BVHnode;
 import javafx.application.Application;
@@ -33,7 +36,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("RayTracing Test");
         Group root = new Group();
-        javafx.scene.canvas.Canvas canvas = new Canvas(400, 300);
+        javafx.scene.canvas.Canvas canvas = new Canvas(600, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Render(gc);
 
@@ -43,24 +46,22 @@ public class Main extends Application {
     }
 
     private void Render(GraphicsContext gc) throws IOException {
-        int W = 400;
-        int H = 300;
+        int W = 600;
+        int H = 600;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
 
-        Vec3 lookfrom = new Vec3(13,2,3);
-        Vec3 lookat = new Vec3(0,1,0);
-        Vec3 vup = new Vec3(0,1,0);
+
         double t0 = 0;
         double t1 = 0;
-        Camera cam = new Camera(20,8.0/6.0,0.1,10,t0,t1,lookfrom,lookat,vup);
-        ArrayList<Hitable> scene = Cornell_Box();
+          ArrayList<Hitable> scene = CornellBox();
+          Camera cam = CornellBoxCam();
         //HitableList world = TestScene();
         BVHnode world = new BVHnode(scene,t0,t1);
 
 
-        int spp = 200;
+        int spp = 1000;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -118,7 +119,7 @@ public class Main extends Application {
                 IOimage.setRGB(x,(H-(y+1)),new Color(Red,Green,Blue,255).getRGB());
             }
         }
-        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\TextureTest-Earth.png"));
+        ImageIO.write(IOimage,"png",new File("C:\\Users\\pzeug\\RT\\src\\output\\CornellBox-Empty.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -131,12 +132,29 @@ public class Main extends Application {
             return n;
         }
     }
-    public ArrayList<Hitable> Cornell_Box(){
+    public Camera CornellBoxCam(){
+        Vec3 lookfrom = new Vec3(278,278,-800);
+        Vec3 lookat = new Vec3(278 ,278,0);
+        Vec3 vup = new Vec3(0,1,0);
+        Camera cam = new Camera(40,1,0,10,0,0,lookfrom,lookat,vup);
+        return cam;
+
+    }
+    public ArrayList<Hitable> CornellBox(){
         ArrayList<Hitable> world = new ArrayList<Hitable>();
 
         Material red = new Lambertian(new PureColorTexture(new Vec3(0.65,0.05,0.05)));
-        Material green = new Lambertian(new PureColorTexture(new Vec3(0.73,0.73,0.73)));
-        Material white = new Lambertian(new PureColorTexture(new Vec3(0.12,0.45,0.05)));
+        Material white = new Lambertian(new PureColorTexture(new Vec3(0.73,0.73,0.73)));
+        Material green = new Lambertian(new PureColorTexture(new Vec3(0.12,0.45,0.05)));
+        Material light = new DiffuseLight(new PureColorTexture(new Vec3(15,15,15)));
+
+        world.add(new YzRect(0,555,0,555,555,green));
+        world.add(new YzRect(0,555,0,555,0,red));
+        world.add(new XzRect(213,343,227,332,554,light));
+        world.add(new XzRect(0,555,0,555,0,white));
+        world.add(new XzRect(0,555,0,555,555,white));
+        world.add(new XyRect(0,555,0,555,555,white));
+
         return world;
     }
 

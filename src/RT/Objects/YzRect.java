@@ -36,6 +36,7 @@ public class YzRect extends Hitable {
         rec.u = (x-y0)/(y1-y0);
         rec.v = (z-z0)/(z1-z0);
         rec.t = t;
+        rec.m = this.m;
         Vec3 outWardNormal = new Vec3(1,0,0);
         rec.setFaceNormal(r,outWardNormal);
         rec.p = r.Pt(t);
