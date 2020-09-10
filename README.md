@@ -3,7 +3,7 @@ CCS's ray tracer based on Java.
 
 
 #### Features:
-**objects:**\
+**Objects:**\
 1.sphere\
 2.box and rectangle surface\
 //TODO: triangle and .obj file support
