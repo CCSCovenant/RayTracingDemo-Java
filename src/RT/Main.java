@@ -46,8 +46,8 @@ public class Main extends Application {
     }
 
     private void Render(GraphicsContext gc) throws IOException {
-        int W = 600;
-        int H = 600;
+        int W = 1200;
+        int H = 1200 ;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
@@ -61,7 +61,7 @@ public class Main extends Application {
         BVHnode world = new BVHnode(scene, t0, t1);
 
 
-        int spp = 10000;
+        int spp = 5000;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -121,7 +121,7 @@ public class Main extends Application {
         }
         System.out.println("Finished");
 
-        ImageIO.write(IOimage, "png", new File("C:\\Users\\pzeug\\RT\\output\\CornellBox-Boxes-Rotated.png"));
+        ImageIO.write(IOimage, "png", new File("C:\\Users\\pzeug\\RT\\output\\CornellBox.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -160,13 +160,17 @@ public class Main extends Application {
         world.add(new XzRect(0, 555, 0, 555, 0, white));
         world.add(new XzRect(0, 555, 0, 555, 555, white));
         world.add(new XyRect(0, 555, 0, 555, 555, white));
-        // Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0.2);
+         Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0);
 
         Material[] whitebox = new Material[6];
+        Material[] whiteMetalBox = new Material[6];
+        for (int i = 0; i < 6; i++) {
+            whiteMetalBox[i] = whiteMetal;
+        }
         for (int i = 0; i < 6; i++) {
             whitebox[i] = white;
         }
-        Box box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), whitebox);
+        Box box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), whiteMetalBox);
         Rotate rotatebox1 = new Rotate(box1, 1, 15);
         Translate movedBox1 = new Translate(rotatebox1, new Vec3(265, 0, 295));
 

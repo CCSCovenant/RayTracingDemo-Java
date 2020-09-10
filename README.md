@@ -24,4 +24,4 @@ CCS's ray tracer based on Java.
 
 ---
 **Some Output:**\
-![alt=image](https://github.com/CCSClassBattlecruiser/RayTracingDemo-Java/blob/master/output/CornellBox-Boxes-Rotated.png?raw=true)
+![alt=image](https://github.com/CCSClassBattlecruiser/RayTracingDemo-Java/blob/master/output/CornellBox-Diffuse-10000spp.png?raw=true)
