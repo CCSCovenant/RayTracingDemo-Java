@@ -23,5 +23,5 @@ CCS's ray tracer based on Java.
 //TODO use SAH to construct BVH tree.
 
 ---
-**Some Output:**
+**Some Output:**\
 ![alt=image](https://github.com/CCSClassBattlecruiser/RayTracingDemo-Java/blob/master/output/CornellBox-Boxes-Rotated.png?raw=true)
