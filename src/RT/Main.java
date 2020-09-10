@@ -61,7 +61,7 @@ public class Main extends Application {
         BVHnode world = new BVHnode(scene, t0, t1);
 
 
-        int spp = 1000;
+        int spp = 10000;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
