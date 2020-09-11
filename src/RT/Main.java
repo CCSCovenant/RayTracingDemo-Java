@@ -36,7 +36,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("RayTracing Test");
         Group root = new Group();
-        javafx.scene.canvas.Canvas canvas = new Canvas(1200, 1200);
+        javafx.scene.canvas.Canvas canvas = new Canvas(900, 900);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Render(gc);
 
@@ -46,8 +46,8 @@ public class Main extends Application {
     }
 
     private void Render(GraphicsContext gc) throws IOException {
-        int W = 1200;
-        int H = 1200;
+        int W = 900;
+        int H = 900;
         int Thread = 8;
         Vec3[][] PixelBuffer = new Vec3[W][H];
         PixelWorker[] WorkerPool = new PixelWorker[Thread];
@@ -61,7 +61,7 @@ public class Main extends Application {
         BVHnode world = new BVHnode(scene, t0, t1);
 
 
-        int spp = 5000;
+        int spp = 50;
         int MaxDepth = 50;
         WritableImage image = new WritableImage(W, H);
         PixelWriter pw = image.getPixelWriter();
@@ -121,7 +121,7 @@ public class Main extends Application {
         }
         System.out.println("Finished");
 
-        ImageIO.write(IOimage, "png", new File("C:\\Users\\pzeug\\RT\\output\\CornellBox.png"));
+        ImageIO.write(IOimage, "png", new File("C:\\Users\\pzeug\\RT\\output\\CornellBox-glass.png"));
         gc.drawImage(image, 0, 0);
     }
 
@@ -151,15 +151,16 @@ public class Main extends Application {
         Material white = new Lambertian(new PureColorTexture(new Vec3(0.73, 0.73, 0.73)));
         Material green = new Lambertian(new PureColorTexture(new Vec3(0.12, 0.45, 0.05)));
         Material light = new DiffuseLight(new PureColorTexture(new Vec3(15, 15, 20)));
+        Material glass = new Dielectric(1.5,0,new Vec3(0.7,0.6,0.73));
         //ImageTexture Earth = new ImageTexture("C:\\Users\\pzeug\\RT\\src\\TextureFiles\\earth.jpg");
         //world.add(new Sphere(new Vec3(278, 278, 350), 100, new Metal(Earth,0.8)));
 
-        world.add(new YzRect(0, 555, 0, 555, 555, green));
-        world.add(new YzRect(0, 555, 0, 555, 0, red));
-        world.add(new XzRect(213, 343, 227, 332, 554, light));
-        world.add(new XzRect(0, 555, 0, 555, 0, white));
-        world.add(new XzRect(0, 555, 0, 555, 555, white));
-        world.add(new XyRect(0, 555, 0, 555, 555, white));
+        world.add(new YzRect(0, 555, 0, 555, 555,false, green));
+        world.add(new YzRect(0, 555, 0, 555, 0,true, red));
+        world.add(new XzRect(213, 343, 227, 332, 554,false, light));
+        world.add(new XzRect(0, 555, 0, 555, 0, true,white));
+        world.add(new XzRect(0, 555, 0, 555, 555, false,white));
+        world.add(new XyRect(0, 555, 0, 555, 555, false,white));
          Material whiteMetal = new Metal(new PureColorTexture(new Vec3(0.73,0.73,0.73)),0);
 
         Material[] whitebox = new Material[6];
@@ -168,7 +169,7 @@ public class Main extends Application {
             whiteMetalBox[i] = whiteMetal;
         }
         for (int i = 0; i < 6; i++) {
-            whitebox[i] = white;
+            whitebox[i] = glass;
         }
         Box box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), whiteMetalBox);
         Rotate rotatebox1 = new Rotate(box1, 1, 15);

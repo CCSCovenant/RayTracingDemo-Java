@@ -16,14 +16,14 @@ public class Box extends Hitable {
         this.maxP = maxP;
         planes = new HitableList();
         // Y max min X max min Z max min;
-        planes.add(new XzRect(minP.x(), maxP.x(), minP.z(), maxP.z(), minP.y(), materials[0]));
-        planes.add(new XzRect(minP.x(), maxP.x(), minP.z(), maxP.z(), maxP.y(), materials[1]));
+        planes.add(new XzRect(minP.x(), maxP.x(), minP.z(), maxP.z(), minP.y(),false, materials[0]));
+        planes.add(new XzRect(minP.x(), maxP.x(), minP.z(), maxP.z(), maxP.y(), true,materials[1]));
         // Xz平面, 方块的上下表面.
-        planes.add(new YzRect(minP.y(), maxP.y(), minP.z(), maxP.z(), minP.x(), materials[2]));
-        planes.add(new YzRect(minP.y(), maxP.y(), minP.z(), maxP.z(), maxP.x(), materials[3]));
+        planes.add(new YzRect(minP.y(), maxP.y(), minP.z(), maxP.z(), minP.x(), false,materials[2]));
+        planes.add(new YzRect(minP.y(), maxP.y(), minP.z(), maxP.z(), maxP.x(),true, materials[3]));
         // Yz平面, 方块的左右表面.
-        planes.add(new XyRect(minP.x(), maxP.x(), minP.y(), maxP.y(), minP.z(), materials[4]));
-        planes.add(new XyRect(minP.x(), maxP.x(), minP.y(), maxP.y(), maxP.z(), materials[5]));
+        planes.add(new XyRect(minP.x(), maxP.x(), minP.y(), maxP.y(), minP.z(), false,materials[4]));
+        planes.add(new XyRect(minP.x(), maxP.x(), minP.y(), maxP.y(), maxP.z(), true,materials[5]));
         // Xy平面, 方块的前后表面.
     }
 

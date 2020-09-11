@@ -11,14 +11,16 @@ public class YzRect extends Hitable {
     double z0;
     double z1;
     double x;
+    boolean positive;
     Material m;
 
-    public YzRect(double y0, double y1, double z0, double z1, double x, Material m) {
+    public YzRect(double y0, double y1, double z0, double z1, double x,boolean positive, Material m) {
         this.y0 = y0;
         this.y1 = y1;
         this.z0 = z0;
         this.z1 = z1;
         this.x = x;
+        this.positive = positive;
         this.m = m;
     }
 
@@ -37,7 +39,12 @@ public class YzRect extends Hitable {
         rec.v = (z - z0) / (z1 - z0);
         rec.t = t;
         rec.m = this.m;
-        Vec3 outWardNormal = new Vec3(1, 0, 0);
+        Vec3 outWardNormal;
+        if (positive) {
+            outWardNormal = new Vec3(1, 0, 0);
+        }else {
+            outWardNormal = new Vec3(-1, 0, 0);
+        }
         rec.setFaceNormal(r, outWardNormal);
         rec.p = r.Pt(t);
         return true;

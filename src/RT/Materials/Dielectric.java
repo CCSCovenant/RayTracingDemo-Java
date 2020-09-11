@@ -8,6 +8,7 @@ import RT.Utils.Vec3;
 public class Dielectric extends Material {
     double refIndex;
     double fuzz;
+    Vec3 color;
 
     public Dielectric() {
 
@@ -16,11 +17,17 @@ public class Dielectric extends Material {
     public Dielectric(double refIndex, double fuzz) {
         this.refIndex = refIndex;
         this.fuzz = fuzz;
+        this.color = new Vec3(1.0,1.0,1.0);
+    }
+    public Dielectric(double refIndex, double fuzz,Vec3 color) {
+        this.refIndex = refIndex;
+        this.fuzz = fuzz;
+        this.color = color;
     }
 
     @Override
     public boolean scatter(Ray in, HitR rec, Vec3 color, Ray out) {
-        color.copyValue(new Vec3(1.0, 1.0, 1.0));
+        color.copyValue(this.color);
         double etaiOverEtat = rec.front ? (1.0 / refIndex) : refIndex;
         Vec3 unitDirection = in.direction.unitVector();
         double cosTheta = Math.min(unitDirection.negative().dot(rec.normal), 1.0);
