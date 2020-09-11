@@ -13,7 +13,6 @@ CPU
 1.Dielectric Materials\
 2.Lambertian Materials\
 3.Metal Materials\
-//TODO: Dielectric Materials with color
 
 **Texture:**\
 1.PureColor Texture\
